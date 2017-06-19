@@ -316,6 +316,12 @@ void Widget::on_pushButton_4_clicked()
 void Widget::on_pushButton_3_clicked()
 {
     ui->progressBar->setValue(0);
-
+    ui->label->setText("");
+    bool res = parseLog(QFileDialog::getOpenFileName(this,tr("Select the RTF Format Log file "),".",tr("RTF Files (*.rtf)")));
+    if(!res)
+    {
+        qDebug()<<"the log file parse failed!!";
+        return ;
+    }
 
 }
