@@ -21,7 +21,7 @@ Widget::Widget(QWidget *parent) :
 Widget::~Widget()
 {
     delete ui;
-     delete excelop;
+
 }
 
 bool Widget::parseLog(QString filename)
@@ -306,4 +306,16 @@ void Widget::castListListVariant2Variant(const QList<QList<QVariant> > &cells, Q
     }
     res = QVariant(vars);
     qDebug()<<vars;
+}
+
+void Widget::on_pushButton_4_clicked()
+{
+    this->close();
+}
+
+void Widget::on_pushButton_3_clicked()
+{
+    ui->progressBar->setValue(0);
+
+
 }

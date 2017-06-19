@@ -29,11 +29,16 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_pushButton_4_clicked();
+
+    void on_pushButton_3_clicked();
+
 private:
     Ui::Widget *ui;
     bool parseLog(QString filename);
     QList<QVariant> getlinedata;
     QList<QList<QVariant>> datasave;
+    QList<QList<QVariant>> comparedlogfile;
     QAxObject * excelop;
     QString logfilepath;
     QString logfilename;

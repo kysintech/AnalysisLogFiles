@@ -32,3 +32,7 @@ FORMS    += widget.ui
 
 RESOURCES += \
     files.qrc
+
+RC_FILE = ./app.rc
+
+
