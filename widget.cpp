@@ -265,6 +265,7 @@ void Widget::on_pushButton_2_clicked()
         QAxObject* pAllCells = worksheet->querySubObject("Cells()");
         pAllCells->dynamicCall("Select()");
         pAllCells->querySubObject("EntireColumn()")->dynamicCall("AutoFit()");
+        worksheet->querySubObject("Cells(int,int)",1,1)->dynamicCall("Select()");
 
         ui->progressBar->setValue(60);
         if(ui->checkBox_2->isChecked())
