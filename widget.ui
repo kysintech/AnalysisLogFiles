@@ -236,7 +236,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Compare Log</string>
+    <string>Compared Log</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_4">
@@ -254,7 +254,7 @@
     </font>
    </property>
    <property name="text">
-    <string>EXIT</string>
+    <string>Compare</string>
    </property>
   </widget>
  </widget>

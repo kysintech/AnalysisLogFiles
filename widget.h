@@ -35,14 +35,18 @@ private slots:
 
 private:
     Ui::Widget *ui;
-    bool parseLog(QString filename);
+    bool parseLog(QString filename, QString &nlogfilename);
     QList<QVariant> getlinedata;
     QList<QList<QVariant>> datasave;
     QList<QList<QVariant>> originallogfile;
     QList<QList<QVariant>> comparedlogfile;
     QAxObject * excelop;
     QString logfilepath;
+    QString originallogfilepath;
+    QString comparedlogfilepath;
     QString logfilename;
+    QString originallogfilename;
+    QString comparedlogfilename;
     void setgetlinedatanull();
     void castListListVariant2Variant(const QList<QList<QVariant> > &cells, QVariant &res);
     bool process_flag;

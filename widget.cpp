@@ -24,15 +24,15 @@ Widget::~Widget()
 
 }
 
-bool Widget::parseLog(QString filename)
+bool Widget::parseLog(QString filename, QString &nlogfilename)
 {
     process_flag=false;
     qDebug()<<filename;
     QStringList getfilename = filename.split('/');
     qDebug()<<getfilename;
-    logfilename.clear();
-    logfilename.append(getfilename.last());
-    qDebug()<<logfilename;
+    nlogfilename.clear();
+    nlogfilename.append(getfilename.last());
+    qDebug()<<nlogfilename;
     ui->lineEdit->setText(filename);
     logfilepath.clear();
     logfilepath.append(filename);
@@ -169,7 +169,7 @@ void Widget::on_pushButton_clicked()
 {
     ui->progressBar->setValue(0);
     ui->label->setText("");
-    bool res = parseLog(QFileDialog::getOpenFileName(this,tr("Select the RTF Format Log file "),".",tr("RTF Files (*.rtf)")));
+    bool res = parseLog(QFileDialog::getOpenFileName(this,tr("Select the RTF Format Log file "),".",tr("RTF Files (*.rtf)")),originallogfilename);
 
     if(!res)
     {
@@ -179,6 +179,7 @@ void Widget::on_pushButton_clicked()
 
     originallogfile.clear();
     originallogfile=datasave;
+    qDebug()<<"original"<<originallogfile.size();
 
 }
 
@@ -314,14 +315,135 @@ void Widget::castListListVariant2Variant(const QList<QList<QVariant> > &cells, Q
 
 void Widget::on_pushButton_4_clicked()
 {
-    this->close();
+    if(originallogfile.size()!=comparedlogfile.size())
+    {
+        ui->message->setText("the two log files do not match!");
+        qDebug()<<"the two log files do not match!";
+        return;
+    }
+
+
+    if(!process_flag)
+    {
+        qDebug()<<"the log file parsing is not finished!  Please Wait !";
+        ui->message->setText("the log file parsing is not finished!  Please Wait !");
+        return ;
+    }
+    ui->message->setText("The excel file is on the way...");
+    QString xlsfile = QFileDialog::getExistingDirectory(this);
+    if(xlsfile.isEmpty())
+    {
+        qDebug()<<"the file name is empty!!";
+        ui->message->setText("the file name is empty!!");
+        return ;
+    }
+    xlsfile.append("/");
+    xlsfile.append(logfilename.left(logfilename.indexOf(".")));
+    xlsfile.append(".xlsx");
+    ui->lineEdit_2->setText(xlsfile);
+    ui->progressBar->setValue(10);
+    excelop = new QAxObject(this);
+    excelop->setControl("Excel.Application");
+    excelop->dynamicCall("SetVisible (bool Visible)","false");
+    excelop->setProperty("DisplayAlerts",false);
+
+    ui->progressBar->setValue(20);
+    QAxObject * workbooks = excelop->querySubObject("WorkBooks");
+    workbooks->dynamicCall("Add");
+    QAxObject * workbook = excelop->querySubObject("ActiveWorkBook");
+    QAxObject * worksheets = workbook->querySubObject("Sheets");
+    QAxObject * worksheet = worksheets->querySubObject("Item(int)",1);
+    worksheet->setProperty("Name","logresult");
+
+    ui->progressBar->setValue(30);
+
+    QAxObject * CellX = worksheet->querySubObject("Range(QVariant,QVariant)","B1");
+    QAxObject * Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(0,212,22));
+    CellX->dynamicCall("SetValue(const QVariant&)","Index");
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","C1");
+    CellX->dynamicCall("SetValue(const QVariant&)","MP");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(112,0,22));
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","D1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Value");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(0,212,22));
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","E1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Limits");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(123,120,202));
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","F1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Result");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(10,112,122));
+
+    ui->progressBar->setValue(40);
+
+    int rows = datasave.size();
+    QString num_t;
+    QString nums;
+
+        nums.clear();
+        num_t.clear();
+        nums.setNum(rows+2,10);
+        num_t.append("B2:F");
+        num_t.append(nums);
+        CellX = worksheet->querySubObject("Range(const QString&)",num_t);
+        qDebug()<<num_t;
+        QVariant res ;
+        castListListVariant2Variant(datasave,res);
+        CellX->setProperty("Value",res);
+
+        ui->progressBar->setValue(60);
+        if(ui->checkBox_2->isChecked())
+        {
+            for(int m=0;m<rows;m++)
+            {
+                nums.clear();
+                num_t.clear();
+                nums.setNum(m+2,10);
+                num_t.append("F");
+                num_t.append(nums);
+                CellX = worksheet->querySubObject("Range(const QString&)",num_t);
+                if(CellX->property("Value")=="Fail")
+                {
+                     Interior = CellX->querySubObject("Interior");
+                     Interior->setProperty("Color",QColor(200,2,2));
+                }
+            }
+        }
+
+    ui->progressBar->setValue(80);
+
+    workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(xlsfile));
+    ui->progressBar->setValue(100);
+    ui->message->setText(tr("Excel is ready! "));
+    ui->label->setText(tr("完成"));
+
+    if(ui->checkBox->isChecked())
+    {
+        excelop->dynamicCall("SetVisible (bool Visible)","true");
+    }else
+    {
+         workbook->dynamicCall("Close()");
+         excelop->dynamicCall("Quit()");
+         delete excelop;
+    }
+
+
+
 }
 
 void Widget::on_pushButton_3_clicked()
 {
     ui->progressBar->setValue(0);
     ui->label->setText("");
-    bool res = parseLog(QFileDialog::getOpenFileName(this,tr("Select the RTF Format Log file "),".",tr("RTF Files (*.rtf)")));
+    bool res = parseLog(QFileDialog::getOpenFileName(this,tr("Select the RTF Format Log file "),".",tr("RTF Files (*.rtf)")),comparedlogfilename);
 
     if(!res)
     {
@@ -330,5 +452,5 @@ void Widget::on_pushButton_3_clicked()
     }
     comparedlogfile.clear();
     comparedlogfile=datasave;
-
+    qDebug()<<"comparedlog"<<comparedlogfile.size();
 }
