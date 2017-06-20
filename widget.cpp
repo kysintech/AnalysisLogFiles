@@ -259,7 +259,12 @@ void Widget::on_pushButton_2_clicked()
         qDebug()<<num_t;
         QVariant res ;
         castListListVariant2Variant(datasave,res);
+        CellX->setProperty("HorizontalAlignment",-4108);
+        CellX->setProperty("VerticalAlignment",-4108);
         CellX->setProperty("Value",res);
+        QAxObject* pAllCells = worksheet->querySubObject("Cells()");
+        pAllCells->dynamicCall("Select()");
+        pAllCells->querySubObject("EntireColumn()")->dynamicCall("AutoFit()");
 
         ui->progressBar->setValue(60);
         if(ui->checkBox_2->isChecked())
