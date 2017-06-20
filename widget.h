@@ -38,6 +38,7 @@ private:
     bool parseLog(QString filename);
     QList<QVariant> getlinedata;
     QList<QList<QVariant>> datasave;
+    QList<QList<QVariant>> originallogfile;
     QList<QList<QVariant>> comparedlogfile;
     QAxObject * excelop;
     QString logfilepath;
@@ -45,6 +46,7 @@ private:
     void setgetlinedatanull();
     void castListListVariant2Variant(const QList<QList<QVariant> > &cells, QVariant &res);
     bool process_flag;
+
 };
 
 #endif // WIDGET_H
