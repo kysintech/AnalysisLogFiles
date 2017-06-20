@@ -227,7 +227,7 @@ void Widget::on_pushButton_2_clicked()
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","C1");
     CellX->dynamicCall("SetValue(const QVariant&)","MP");
     Interior = CellX->querySubObject("Interior");
-    Interior->setProperty("Color",QColor(112,0,22));
+    Interior->setProperty("Color",QColor(123,120,202));
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","D1");
     CellX->dynamicCall("SetValue(const QVariant&)","Value");
@@ -268,7 +268,7 @@ void Widget::on_pushButton_2_clicked()
             {
                 nums.clear();
                 num_t.clear();
-                nums.setNum(m+2,10);
+                nums.setNum(m+1,10);
                 num_t.append("F");
                 num_t.append(nums);
                 CellX = worksheet->querySubObject("Range(const QString&)",num_t);
@@ -368,7 +368,7 @@ void Widget::on_pushButton_4_clicked()
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","C1");
     CellX->dynamicCall("SetValue(const QVariant&)","MP");
     Interior = CellX->querySubObject("Interior");
-    Interior->setProperty("Color",QColor(112,0,22));
+    Interior->setProperty("Color",QColor(123,120,202));
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","D1");
     CellX->dynamicCall("SetValue(const QVariant&)","Value");
@@ -387,19 +387,20 @@ void Widget::on_pushButton_4_clicked()
 
     ui->progressBar->setValue(40);
 
-    int rows = datasave.size();
+    int rows = originallogfile.size();
+
     QString num_t;
     QString nums;
 
         nums.clear();
         num_t.clear();
-        nums.setNum(rows+2,10);
+        nums.setNum(rows+1,10);
         num_t.append("B2:F");
         num_t.append(nums);
         CellX = worksheet->querySubObject("Range(const QString&)",num_t);
         qDebug()<<num_t;
         QVariant res ;
-        castListListVariant2Variant(datasave,res);
+        castListListVariant2Variant(originallogfile,res);
         CellX->setProperty("Value",res);
 
         ui->progressBar->setValue(60);
@@ -409,8 +410,43 @@ void Widget::on_pushButton_4_clicked()
             {
                 nums.clear();
                 num_t.clear();
-                nums.setNum(m+2,10);
+                nums.setNum(m+1,10);
                 num_t.append("F");
+                num_t.append(nums);
+                CellX = worksheet->querySubObject("Range(const QString&)",num_t);
+                if(CellX->property("Value")=="Fail")
+                {
+                     Interior = CellX->querySubObject("Interior");
+                     Interior->setProperty("Color",QColor(200,2,2));
+                }
+            }
+        }
+
+        ui->progressBar->setValue(70);
+
+
+        rows = comparedlogfile.size();
+        nums.clear();
+        num_t.clear();
+        nums.setNum(rows+1,10);
+        num_t.append("H2:L");
+        num_t.append(nums);
+        CellX = worksheet->querySubObject("Range(const QString&)",num_t);
+        qDebug()<<num_t;
+        //QVariant res ;
+        res.clear();
+        castListListVariant2Variant(comparedlogfile,res);
+        CellX->setProperty("Value",res);
+
+        ui->progressBar->setValue(75);
+        if(ui->checkBox_2->isChecked())
+        {
+            for(int m=0;m<rows;m++)
+            {
+                nums.clear();
+                num_t.clear();
+                nums.setNum(m+1,10);
+                num_t.append("L");
                 num_t.append(nums);
                 CellX = worksheet->querySubObject("Range(const QString&)",num_t);
                 if(CellX->property("Value")=="Fail")
