@@ -170,7 +170,7 @@ void Widget::on_pushButton_clicked()
     ui->progressBar->setValue(0);
     ui->label->setText("");
     bool res = parseLog(QFileDialog::getOpenFileName(this,tr("Select the RTF Format Log file "),".",tr("RTF Files (*.rtf)")),originallogfilename);
-
+    qDebug()<<"originallogfilename is :"<<originallogfilename;
     if(!res)
     {
         qDebug()<<"the log file parse failed!!";
@@ -338,7 +338,10 @@ void Widget::on_pushButton_4_clicked()
         return ;
     }
     xlsfile.append("/");
-    xlsfile.append(logfilename.left(logfilename.indexOf(".")));
+    xlsfile.append(originallogfilename.left(originallogfilename.indexOf(".")));
+    xlsfile.append("-");
+    xlsfile.append(comparedlogfilename.left(comparedlogfilename.indexOf(".")));
+    xlsfile.append("-result");
     xlsfile.append(".xlsx");
     ui->lineEdit_2->setText(xlsfile);
     ui->progressBar->setValue(10);
@@ -444,7 +447,7 @@ void Widget::on_pushButton_3_clicked()
     ui->progressBar->setValue(0);
     ui->label->setText("");
     bool res = parseLog(QFileDialog::getOpenFileName(this,tr("Select the RTF Format Log file "),".",tr("RTF Files (*.rtf)")),comparedlogfilename);
-
+    qDebug()<<"comparedlogfilename is :"<<comparedlogfilename;
     if(!res)
     {
         qDebug()<<"the log file parse failed!!";
