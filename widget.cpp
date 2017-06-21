@@ -103,7 +103,7 @@ bool Widget::parseLog(QString filename, QString &nlogfilename)
             datasave.append(getlinedata);
         }
 
-        if(loggetline.indexOf("Dut RU:",0,Qt::CaseSensitive)>0)
+        if(loggetline.indexOf("Dut RU:",0,Qt::CaseSensitive)>0)  //不同的Log文件有不同的Log格式。
         {
             setgetlinedatanull();
             num_dut++;
