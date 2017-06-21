@@ -220,29 +220,50 @@ void Widget::on_pushButton_2_clicked()
     ui->progressBar->setValue(30);
 
     QAxObject * CellX = worksheet->querySubObject("Range(QVariant,QVariant)","B1");
+    QAxObject * font = CellX->querySubObject("Font");
     QAxObject * Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(0,212,22));
     CellX->dynamicCall("SetValue(const QVariant&)","Index");
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","C1");
     CellX->dynamicCall("SetValue(const QVariant&)","MP");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(123,120,202));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
+
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","D1");
     CellX->dynamicCall("SetValue(const QVariant&)","Value");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(0,212,22));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","E1");
     CellX->dynamicCall("SetValue(const QVariant&)","Limits");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(123,120,202));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","F1");
     CellX->dynamicCall("SetValue(const QVariant&)","Result");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(10,112,122));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     ui->progressBar->setValue(40);
 
@@ -370,52 +391,92 @@ void Widget::on_pushButton_4_clicked()
     QAxObject * Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(0,212,22));
     CellX->dynamicCall("SetValue(const QVariant&)","Index");
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    QAxObject * font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","C1");
     CellX->dynamicCall("SetValue(const QVariant&)","MP");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(123,120,202));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
+
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","D1");
     CellX->dynamicCall("SetValue(const QVariant&)","Value");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(0,212,22));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","E1");
     CellX->dynamicCall("SetValue(const QVariant&)","Limits");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(123,120,202));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","F1");
     CellX->dynamicCall("SetValue(const QVariant&)","Result");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(10,112,122));
-
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","H1");
     CellX->dynamicCall("SetValue(const QVariant&)","Index");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(0,212,22));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","I1");
     CellX->dynamicCall("SetValue(const QVariant&)","MP");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(123,120,202));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","J1");
     CellX->dynamicCall("SetValue(const QVariant&)","Value");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(0,212,22));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","K1");
     CellX->dynamicCall("SetValue(const QVariant&)","Limits");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(123,120,202));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     CellX = worksheet->querySubObject("Range(QVariant,QVariant)","L1");
     CellX->dynamicCall("SetValue(const QVariant&)","Result");
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(0,111,132));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
 
     ui->progressBar->setValue(40);
 
