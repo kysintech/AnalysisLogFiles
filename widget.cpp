@@ -51,7 +51,7 @@ bool Widget::parseLog(QString filename, QString &nlogfilename)
     datasave.clear();
     while(!logfile.atEnd())
     {
-        loggetline = logfile.readLine();
+        loggetline = logfile.readLine();  // 每次读取一行
         if(loggetline.indexOf("Dut DUT:",0,Qt::CaseSensitive)>0)
         {
             setgetlinedatanull();
