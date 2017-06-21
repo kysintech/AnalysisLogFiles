@@ -259,8 +259,8 @@ void Widget::on_pushButton_2_clicked()
         qDebug()<<num_t;
         QVariant res ;
         castListListVariant2Variant(datasave,res);
-        CellX->setProperty("HorizontalAlignment",-4108);
-        CellX->setProperty("VerticalAlignment",-4108);
+        CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+        CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
         CellX->setProperty("Value",res);
         QAxObject* pAllCells = worksheet->querySubObject("Cells()");
         pAllCells->dynamicCall("Select()");
@@ -391,6 +391,32 @@ void Widget::on_pushButton_4_clicked()
     Interior = CellX->querySubObject("Interior");
     Interior->setProperty("Color",QColor(10,112,122));
 
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","H1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Index");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(0,212,22));
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","I1");
+    CellX->dynamicCall("SetValue(const QVariant&)","MP");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(123,120,202));
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","J1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Value");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(0,212,22));
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","K1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Limits");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(123,120,202));
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","L1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Result");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(0,111,132));
+
     ui->progressBar->setValue(40);
 
     int rows = originallogfile.size();
@@ -407,7 +433,14 @@ void Widget::on_pushButton_4_clicked()
         qDebug()<<num_t;
         QVariant res ;
         castListListVariant2Variant(originallogfile,res);
+        CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+        CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
         CellX->setProperty("Value",res);
+
+        QAxObject* pAllCells = worksheet->querySubObject("Cells()");
+        pAllCells->dynamicCall("Select()");
+        pAllCells->querySubObject("EntireColumn()")->dynamicCall("AutoFit()");
+        worksheet->querySubObject("Cells(int,int)",1,1)->dynamicCall("Select()");
 
         ui->progressBar->setValue(60);
         if(ui->checkBox_2->isChecked())
@@ -442,7 +475,14 @@ void Widget::on_pushButton_4_clicked()
         //QVariant res ;
         res.clear();
         castListListVariant2Variant(comparedlogfile,res);
+        CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+        CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
         CellX->setProperty("Value",res);
+
+        pAllCells = worksheet->querySubObject("Cells()");
+        pAllCells->dynamicCall("Select()");
+        pAllCells->querySubObject("EntireColumn()")->dynamicCall("AutoFit()");
+        worksheet->querySubObject("Cells(int,int)",1,1)->dynamicCall("Select()");
 
         ui->progressBar->setValue(75);
         if(ui->checkBox_2->isChecked())
