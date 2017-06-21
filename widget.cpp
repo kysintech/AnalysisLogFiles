@@ -156,7 +156,7 @@ bool Widget::parseLog(QString filename, QString &nlogfilename)
     return true;
 }
 
-void Widget::setgetlinedatanull()
+void Widget::setgetlinedatanull() //根据列数的不同可以动态更改列数
 {
     getlinedata.clear();
     for(int m=0;m<5;m++)
