@@ -48,10 +48,13 @@ bool Widget::parseLog(QString filename, QString &nlogfilename)
     long num_dut=0;
     long num_measure=0;
     long num_limit=0;
+    long line_num=0;
     datasave.clear();
     while(!logfile.atEnd())
     {
         loggetline = logfile.readLine();  // 每次读取一行
+        line_num++;
+        qDebug()<<line_num;
         if(loggetline.indexOf("Dut DUT:",0,Qt::CaseSensitive)>0)
         {
             setgetlinedatanull();
@@ -599,4 +602,191 @@ void Widget::on_pushButton_3_clicked()
     comparedlogfile.clear();
     comparedlogfile=datasave;
     qDebug()<<"comparedlog"<<comparedlogfile.size();
+}
+
+void Widget::on_pushButton_5_clicked()
+{
+    QString txtfilename = QFileDialog::getOpenFileName(this,tr("Select the TXT Format log file"),".",tr("TXT Files (*.txt)"));
+    QFile txtlogfile(txtfilename);
+    txtlogfile.open(QIODevice::ReadOnly|QIODevice::Text);
+    qDebug()<<txtlogfile.size();
+    QString txtlogline;
+    QList<QVariant> linedata;
+    QList<QList<QVariant>> txtlogdata;
+
+    linedata.append(" ");
+    linedata.append(" ");
+    linedata.append(" ");
+    linedata.append(" ");
+    while(!txtlogfile.atEnd())
+    {
+        txtlogline = txtlogfile.readLine();
+
+        if(txtlogline.indexOf("Dut DUT:",0,Qt::CaseSensitive)>=0)
+        {
+            linedata[0]=txtlogline.right(txtlogline.length()-txtlogline.indexOf("Dut DUT:",0,Qt::CaseSensitive)-8).left(txtlogline.right(txtlogline.length()-txtlogline.indexOf("Dut DUT:",0,Qt::CaseSensitive)-8).indexOf("\n",0,Qt::CaseSensitive));
+        }
+
+        if(txtlogline.indexOf("Measured:",0,Qt::CaseSensitive)>=0)
+        {
+
+            if(txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)>=0)
+            {
+                linedata[1]=txtlogline.mid(txtlogline.indexOf("Measured:",0,Qt::CaseSensitive)+9,txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)-txtlogline.indexOf("Measured:",0,Qt::CaseSensitive)-9);
+                 if(txtlogline.indexOf("Pass",0,Qt::CaseSensitive)>=0)
+                {
+                     linedata[2]=txtlogline.mid(txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)+7,txtlogline.indexOf("Pass",0,Qt::CaseSensitive)-txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)-7).left(txtlogline.mid(txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)+7,txtlogline.indexOf("Pass",0,Qt::CaseSensitive)-txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)-7).indexOf("Pass",0,Qt::CaseSensitive));
+
+                    linedata[3]="Pass";
+                }
+                if(txtlogline.indexOf("Fail",0,Qt::CaseSensitive)>=0)
+                {
+                    linedata[2]=txtlogline.mid(txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)+7,txtlogline.indexOf("Fail",0,Qt::CaseSensitive)-txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)-7).left(txtlogline.mid(txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)+7,txtlogline.indexOf("Fail",0,Qt::CaseSensitive)-txtlogline.indexOf("Limits:",0,Qt::CaseSensitive)-7).indexOf("Fail",0,Qt::CaseSensitive));
+
+                    linedata[3]="Fail";
+                }
+            }
+            else
+            {
+                if(txtlogline.indexOf("Pass",0,Qt::CaseSensitive)>=0)
+                {    linedata[1]=txtlogline.mid(txtlogline.indexOf("Measured:",0,Qt::CaseSensitive)+9,txtlogline.indexOf("Pass",0,Qt::CaseSensitive)-txtlogline.indexOf("Measured:",0,Qt::CaseSensitive)-9);
+
+                    linedata[3]="Pass";
+                }
+                if(txtlogline.indexOf("Fail",0,Qt::CaseSensitive)>=0)
+                {
+                    linedata[1]=txtlogline.mid(txtlogline.indexOf("Measured:",0,Qt::CaseSensitive)+9,txtlogline.indexOf("Fail",0,Qt::CaseSensitive)-txtlogline.indexOf("Measured:",0,Qt::CaseSensitive)-9);
+
+                    linedata[3]="Fail";
+                }
+
+            }
+            qDebug()<<linedata[0]<<linedata[1];
+            txtlogdata.append(linedata);
+            linedata[0]=" ";
+            linedata[1]=" ";
+            linedata[2]=" ";
+            linedata[3]=" ";
+        }
+
+    }
+
+
+    QString xlsfile;
+    xlsfile.append(txtfilename.left(txtfilename.indexOf(".")));
+    xlsfile.append(".xlsx");
+    ui->lineEdit_2->setText(xlsfile);
+    ui->progressBar->setValue(10);
+    excelop = new QAxObject(this);
+    excelop->setControl("Excel.Application");
+    excelop->dynamicCall("SetVisible (bool Visible)","false");
+    excelop->setProperty("DisplayAlerts",false);
+
+    ui->progressBar->setValue(20);
+    QAxObject * workbooks = excelop->querySubObject("WorkBooks");
+    workbooks->dynamicCall("Add");
+    QAxObject * workbook = excelop->querySubObject("ActiveWorkBook");
+    QAxObject * worksheets = workbook->querySubObject("Sheets");
+    QAxObject * worksheet = worksheets->querySubObject("Item(int)",1);
+    worksheet->setProperty("Name","logresult");
+
+    ui->progressBar->setValue(30);
+
+    QAxObject * CellX = worksheet->querySubObject("Range(QVariant,QVariant)","B1");
+    QAxObject * font = CellX->querySubObject("Font");
+    QAxObject * Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(0,212,22));
+    CellX->dynamicCall("SetValue(const QVariant&)","MP");
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font->setProperty("Bold",true);
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","C1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Values");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(123,120,202));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
+
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","D1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Limits");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(0,212,22));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
+
+    CellX = worksheet->querySubObject("Range(QVariant,QVariant)","E1");
+    CellX->dynamicCall("SetValue(const QVariant&)","Result");
+    Interior = CellX->querySubObject("Interior");
+    Interior->setProperty("Color",QColor(123,120,202));
+    CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+    CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+    font = CellX->querySubObject("Font");
+    font->setProperty("Bold",true);
+
+    int rows = txtlogdata.size();
+    qDebug()<<rows;
+    QString num_t;
+    QString nums;
+
+        nums.clear();
+        num_t.clear();
+        nums.setNum(rows+1,10);
+        num_t.append("B2:E");
+        num_t.append(nums);
+        CellX = worksheet->querySubObject("Range(const QString&)",num_t);
+        qDebug()<<num_t;
+        QVariant res ;
+        castListListVariant2Variant(txtlogdata,res);
+        CellX->setProperty("HorizontalAlignment",-4108);  //设置水平居中
+        CellX->setProperty("VerticalAlignment",-4108);    //设置垂直居中
+        CellX->setProperty("Value",res);
+        QAxObject* pAllCells = worksheet->querySubObject("Cells()");
+        pAllCells->dynamicCall("Select()");
+        pAllCells->querySubObject("EntireColumn()")->dynamicCall("AutoFit()");
+
+        worksheet->querySubObject("Cells(int,int)",1,1)->dynamicCall("Select()");
+
+        ui->progressBar->setValue(60);
+        if(ui->checkBox_2->isChecked())
+        {
+            for(int m=0;m<rows;m++)
+            {
+                nums.clear();
+                num_t.clear();
+                nums.setNum(m+1,10);
+                num_t.append("E");
+                num_t.append(nums);
+                CellX = worksheet->querySubObject("Range(const QString&)",num_t);
+                if(CellX->property("Value")=="Fail")
+                {
+                     Interior = CellX->querySubObject("Interior");
+                     Interior->setProperty("Color",QColor(200,2,2));
+                }
+            }
+        }
+
+    ui->progressBar->setValue(80);
+
+    workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(xlsfile));
+    ui->progressBar->setValue(100);
+    ui->message->setText(tr("Excel is ready! "));
+    ui->label->setText(tr("完成"));
+
+    if(ui->checkBox->isChecked())
+    {
+        excelop->dynamicCall("SetVisible (bool Visible)","true");
+    }else
+    {
+         workbook->dynamicCall("Close()");
+         excelop->dynamicCall("Quit()");
+         delete excelop;
+    }
+
+
 }
