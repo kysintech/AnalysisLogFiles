@@ -572,6 +572,7 @@ void Widget::on_pushButton_4_clicked()
     workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(xlsfile));
     ui->progressBar->setValue(100);
     ui->message->setText(tr("Excel is ready! "));
+    ui->label->setStyleSheet("color:rgb(0,255,0);");
     ui->label->setText(tr("完成"));
 
     if(ui->checkBox->isChecked())
@@ -607,6 +608,14 @@ void Widget::on_pushButton_3_clicked()
 void Widget::on_pushButton_5_clicked()
 {
     QString txtfilename = QFileDialog::getOpenFileName(this,tr("Select the TXT Format log file"),".",tr("TXT Files (*.txt)"));
+    if(txtfilename.isEmpty())
+    {
+        ui->message->setText("TXT Log 路径为空!!");
+        ui->label->setStyleSheet("color:rgb(255,0,0);");
+        ui->label->setText("警告");
+        ui->progressBar->setValue(0);
+        return;
+    }
     QFile txtlogfile(txtfilename);
     txtlogfile.open(QIODevice::ReadOnly|QIODevice::Text);
     qDebug()<<txtlogfile.size();
@@ -776,6 +785,7 @@ void Widget::on_pushButton_5_clicked()
     workbook->dynamicCall("SaveAs(const QString&)",QDir::toNativeSeparators(xlsfile));
     ui->progressBar->setValue(100);
     ui->message->setText(tr("Excel is ready! "));
+    ui->label->setStyleSheet("color:rgb(0,255,0);");
     ui->label->setText(tr("完成"));
 
     if(ui->checkBox->isChecked())
