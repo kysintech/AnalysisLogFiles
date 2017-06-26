@@ -203,7 +203,8 @@ void Widget::on_pushButton_2_clicked()
         return ;
     }
     xlsfile.append("/");
-    xlsfile.append(logfilename.left(logfilename.indexOf(".")));
+    xlsfile.append(originallogfilename.left(originallogfilename.indexOf(".")));
+    qDebug()<<originallogfilename;
     xlsfile.append(".xlsx");
     ui->lineEdit_2->setText(xlsfile);
     ui->progressBar->setValue(10);
