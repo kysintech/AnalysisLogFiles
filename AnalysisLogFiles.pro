@@ -6,7 +6,7 @@
 
 QT       += core gui
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets axcontainer
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets axcontainer sql
 
 TARGET = AnalysisLogFiles
 TEMPLATE = app

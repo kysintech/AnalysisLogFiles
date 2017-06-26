@@ -10,6 +10,9 @@
 #include <windows.h>
 #include <ActiveQt/qaxobject.h>
 #include <QtXml/QDomDocument>
+#include <QtSql/QSqlDatabase>
+#include <QtSql/qtsql-config.h>
+#include <QtSql/qsqlquery.h>
 
 
 namespace Ui {
@@ -52,7 +55,8 @@ private:
     void setgetlinedatanull();
     void castListListVariant2Variant(const QList<QList<QVariant> > &cells, QVariant &res);
     bool process_flag;
-
+    QSqlDatabase dbcon;
+    QSqlQuery dbquery;
 };
 
 #endif // WIDGET_H
